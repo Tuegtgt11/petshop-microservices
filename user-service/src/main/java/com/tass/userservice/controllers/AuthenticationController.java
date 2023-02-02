@@ -28,8 +28,8 @@ public class AuthenticationController {
         return userService.register(request);
     }
 
-     @PutMapping("user/update/{id}")
-    public BaseResponseV2<UserDTO> updateAccount(@RequestBody UserRequest userRequest, Principal principal, @PathVariable Long id) throws ApplicationException {
-        return userService.updateAccount(userRequest, principal, id);
+     @PutMapping("/user/update")
+    public BaseResponseV2<UserDTO> updateAccount(@RequestBody UserRequest userRequest) throws ApplicationException {
+        return userService.updateAccount(userRequest);
      }
 }

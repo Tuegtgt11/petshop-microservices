@@ -31,6 +31,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.redisson:redisson-spring-data-26:3.18.1'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-amqp'
     implementation 'redis.clients:jedis:3.9.0'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 

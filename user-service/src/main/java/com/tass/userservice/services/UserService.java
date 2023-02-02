@@ -24,10 +24,11 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class UserService {
+public class UserService extends BaseService{
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -69,8 +70,6 @@ public class UserService {
         user.setPhone(request.getPhone());
         user.setAvatar("https://as1.ftcdn.net/v2/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg?fbclid=IwAR0IeeX4fdIKXrmKyVLdn3mGEhAkNFdQv3MH7f4P5okIBtG_Rx_fqonZjss");
         user.setStatus(UserStatus.ACTIVE);
-        Role role = roleRepository.findRoleByName("USER");
-        user.setRole(role);
         userRepository.save(user);
         return new BaseResponseV2<>(user);
     }
@@ -93,6 +92,7 @@ public class UserService {
         String token = UUID.randomUUID().toString();
 
         userLoginDTO.setToken(token);
+        userLoginDTO.setRole(user.getRole().getName());
         userLoginDTO.setUserId(user.getId());
         userLoginDTO.setTimeToLive(10000);
 
@@ -104,12 +104,13 @@ public class UserService {
         return loginResponse;
     }
 
+    public BaseResponseV2<UserDTO> updateAccount(UserRequest userRequest){
+        UserDTO userDTO = getUserDTO();
 
-    public BaseResponseV2<UserDTO> updateAccount(UserRequest userRequest, Principal principal, Long id){
-        Optional<User> optionalUser = userRepository.findById(id);
-        Optional<User> optionalPrincipal = userRepository.findUserByUsernameAndStatus(principal.getName(), UserStatus.ACTIVE);
-        if (optionalUser.isEmpty() || optionalPrincipal.isEmpty()) {
-            throw new ApplicationException(ERROR.ID_NOT_FOUND);
+        Optional<User> optionalUser = userRepository.findById(userDTO.getUserId());
+
+        if (optionalUser.isEmpty()) {
+            throw new ApplicationException(ERROR.ID_NOT_FOUND, "Id not found");
         }
         if (StringUtils.isBlank(userRequest.getPassword())) {
             throw new ApplicationException(ERROR.INVALID_PARAM, "Password is empty");

@@ -12,17 +12,24 @@ import java.util.Collection;
 public class UserDetailExtend implements UserDetails {
     private long userId;
 
+    private Collection<? extends GrantedAuthority> authorities;
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public UserDetailExtend(long userId, Collection<? extends GrantedAuthority> authorities) {
+        this.userId = userId;
+        this.authorities = authorities;
+    }
 
     public UserDetailExtend(){
 
     }
 
-//    UserLoginDTO
-
     public UserDetailExtend(UserLoginDTO userLoginDTO){
         this.userId = userLoginDTO.getUserId();
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -59,4 +66,5 @@ public class UserDetailExtend implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
